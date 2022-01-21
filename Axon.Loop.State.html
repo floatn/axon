@@ -7,7 +7,7 @@
     <meta name="generator" content="ExDoc v0.26.0">
     <meta name="project" content="Axon v0.1.0-dev">
 
-    <title>Axon.Regularizers — Axon v0.1.0-dev</title>
+    <title>Axon.Loop.State — Axon v0.1.0-dev</title>
     <link rel="stylesheet" href="dist/elixir-b5076885a795c65e636c.css" />
 
     <script src="dist/sidebar_items-251e15be60.js"></script>
@@ -80,10 +80,10 @@ Axon
     <div id="content" class="content-inner">
 
 <h1>
-  <span translate="no">Axon.Regularizers</span> 
+  <span translate="no">Axon.Loop.State</span> 
   <small class="app-vsn" translate="no">(Axon v0.1.0-dev)</small>
 
-    <a href="https://github.com/elixir-nx/axon/blob/v0.1.0-dev/lib/axon/regularizers.ex#L1" title="View Source" class="view-source" rel="help">
+    <a href="https://github.com/elixir-nx/axon/blob/v0.1.0-dev/lib/axon/loop/state.ex#L1" title="View Source" class="view-source" rel="help">
       <span class="icon-code" aria-hidden="true"></span>
       <span class="sr-only">View Source</span>
     </a>
@@ -93,143 +93,25 @@ Axon
 
 
   <section id="moduledoc">
-<p>Collection of parameter regularizers.</p>
+<p>Accumulated state in an Axon.Loop.</p><p>Loop state is a struct:</p><pre><code class="makeup elixir"><span class="p" data-group-id="6474517385-1">%</span><span class="nc" data-group-id="6474517385-1">State</span><span class="p" data-group-id="6474517385-1">{</span><span class="w">
+  </span><span class="ss">epoch</span><span class="p">:</span><span class="w"> </span><span class="n">tensor</span><span class="p" data-group-id="6474517385-2">(</span><span class="p" data-group-id="6474517385-2">)</span><span class="p">,</span><span class="w">
+  </span><span class="ss">max_epoch</span><span class="p">:</span><span class="w"> </span><span class="n">tensor</span><span class="p" data-group-id="6474517385-3">(</span><span class="p" data-group-id="6474517385-3">)</span><span class="p">,</span><span class="w">
+  </span><span class="ss">iteration</span><span class="p">:</span><span class="w"> </span><span class="n">tensor</span><span class="p" data-group-id="6474517385-4">(</span><span class="p" data-group-id="6474517385-4">)</span><span class="p">,</span><span class="w">
+  </span><span class="ss">max_iteration</span><span class="p">:</span><span class="w"> </span><span class="n">tensor</span><span class="p" data-group-id="6474517385-5">(</span><span class="p" data-group-id="6474517385-5">)</span><span class="p">,</span><span class="w">
+  </span><span class="ss">metrics</span><span class="p">:</span><span class="w"> </span><span class="n">map</span><span class="p" data-group-id="6474517385-6">(</span><span class="n">string</span><span class="p" data-group-id="6474517385-7">(</span><span class="p" data-group-id="6474517385-7">)</span><span class="p">,</span><span class="w"> </span><span class="n">container</span><span class="p" data-group-id="6474517385-8">(</span><span class="p" data-group-id="6474517385-8">)</span><span class="p" data-group-id="6474517385-6">)</span><span class="p">,</span><span class="w">
+  </span><span class="ss">times</span><span class="p">:</span><span class="w"> </span><span class="n">list</span><span class="p" data-group-id="6474517385-9">(</span><span class="n">number</span><span class="p" data-group-id="6474517385-10">(</span><span class="p" data-group-id="6474517385-10">)</span><span class="p" data-group-id="6474517385-9">)</span><span class="p">,</span><span class="w">
+  </span><span class="ss">step_state</span><span class="p">:</span><span class="w"> </span><span class="n">container</span><span class="p" data-group-id="6474517385-11">(</span><span class="p" data-group-id="6474517385-11">)</span><span class="w">
+</span><span class="p" data-group-id="6474517385-1">}</span></code></pre><p><code class="inline">epoch</code> is the current epoch, starting at 0, of the nested loop.
+Defaults to 0.</p><p><code class="inline">max_epoch</code> is the maximum number of epochs the loop should run
+for. Defaults to 1.</p><p><code class="inline">iteration</code> is the current iteration of the inner loop. In supervised
+settings, this will be the current batch. Defaults to 0.</p><p><code class="inline">max_iteration</code> is the maximum number of iterations the loop should
+run a given epoch for. Defaults to -1 (no max).</p><p><code class="inline">metrics</code> is a map of <code class="inline">%{&quot;metric_name&quot; =&gt; value}</code> which accumulates metrics
+over the course of loop processing. Defaults to an empty map.</p><p><code class="inline">times</code> is a map of <code class="inline">%{epoch_number =&gt; value}</code> which maps a given epoch
+to the processing time. Defaults to an empty map.</p><p><code class="inline">step_state</code> is the step state as defined by the loop's processing
+initialization and update functions. <code class="inline">step_state</code> is a required field.</p>
   </section>
 
 
-  <section id="summary" class="details-list">
-    <h1 class="section-heading">
-      <a class="hover-link" href="#summary">
-        <span class="icon-link" aria-hidden="true"></span>
-        <span class="sr-only">Link to this section</span>
-      </a>
-      Summary
-    </h1>
-
-  <div class="summary-functions summary">
-    <h2>
-      <a href="#functions">Functions</a>
-    </h2>
-
-      <div class="summary-row">
-        <div class="summary-signature">
-          <a href="#l1/2" translate="no">l1(x, opts \\ [])</a>
-
-        </div>
-
-          <div class="summary-synopsis"><p>L1 Regularization.</p></div>
-
-      </div>
-
-      <div class="summary-row">
-        <div class="summary-signature">
-          <a href="#l1l2/2" translate="no">l1l2(x, opts \\ [])</a>
-
-        </div>
-
-          <div class="summary-synopsis"><p>L1L2 Regularization.</p></div>
-
-      </div>
-
-      <div class="summary-row">
-        <div class="summary-signature">
-          <a href="#l2/2" translate="no">l2(x, opts \\ [])</a>
-
-        </div>
-
-          <div class="summary-synopsis"><p>L2 Regularization.</p></div>
-
-      </div>
-
-  </div>
-
-  </section>
-
-
-  <section id="functions" class="details-list">
-    <h1 class="section-heading">
-      <a class="hover-link" href="#functions">
-        <span class="icon-link" aria-hidden="true"></span>
-        <span class="sr-only">Link to this section</span>
-      </a>
-Functions
-    </h1>
-    <div class="functions-list">
-<section class="detail" id="l1/2">
-
-    <span id="l1/1"></span>
-
-  <div class="detail-header">
-    <a href="#l1/2" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature" translate="no">l1(x, opts \\ [])</h1>
-
-      <a href="https://github.com/elixir-nx/axon/blob/v0.1.0-dev/lib/axon/regularizers.ex#L0" class="view-source" rel="help" title="View Source">
-       <span class="icon-code" aria-hidden="true"></span>
-       <span class="sr-only">View Source</span>
-     </a>
-
-
-  </div>
-
-  <section class="docstring">
-
-<p>L1 Regularization.</p>
-  </section>
-</section>
-<section class="detail" id="l1l2/2">
-
-    <span id="l1l2/1"></span>
-
-  <div class="detail-header">
-    <a href="#l1l2/2" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature" translate="no">l1l2(x, opts \\ [])</h1>
-
-      <a href="https://github.com/elixir-nx/axon/blob/v0.1.0-dev/lib/axon/regularizers.ex#L0" class="view-source" rel="help" title="View Source">
-       <span class="icon-code" aria-hidden="true"></span>
-       <span class="sr-only">View Source</span>
-     </a>
-
-
-  </div>
-
-  <section class="docstring">
-
-<p>L1L2 Regularization.</p>
-  </section>
-</section>
-<section class="detail" id="l2/2">
-
-    <span id="l2/1"></span>
-
-  <div class="detail-header">
-    <a href="#l2/2" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature" translate="no">l2(x, opts \\ [])</h1>
-
-      <a href="https://github.com/elixir-nx/axon/blob/v0.1.0-dev/lib/axon/regularizers.ex#L0" class="view-source" rel="help" title="View Source">
-       <span class="icon-code" aria-hidden="true"></span>
-       <span class="sr-only">View Source</span>
-     </a>
-
-
-  </div>
-
-  <section class="docstring">
-
-<p>L2 Regularization.</p>
-  </section>
-</section>
-
-    </div>
-  </section>
 
       <footer class="footer">
 
